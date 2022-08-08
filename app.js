@@ -1,9 +1,11 @@
-const http = require("http");
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
+const http = require('http');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const Morgan = require('morgan');
 
 const app = express();
+app.use(Morgan('dev'));
 
 app.use((req, res, next) => {
   console.log(`Request IP ${req.url}`);
@@ -12,7 +14,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    const pathToFile = path.join(__dirname, "static", req.url );
+    const pathToFile = path.join(__dirname, 'static', req.url );
     fs.stat(pathToFile,  (err, fileInfo)=> {
         if(err){
             next();
@@ -36,5 +38,5 @@ app.use((req, res, next) => {
 
 
 http.createServer(app).listen(3000, () => {
-  console.log("started on port 3000");
+  console.log('started on port 3000');
 });
