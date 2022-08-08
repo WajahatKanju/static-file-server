@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const Morgan = require('morgan');
 
+const pathToStatic = path.join(__dirname, 'static');
+
 const app = express();
 app.use(Morgan('dev'));
 
@@ -13,23 +15,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-    const pathToFile = path.join(__dirname, 'static', req.url );
-    fs.stat(pathToFile,  (err, fileInfo)=> {
-        if(err){
-            next();
-            return;
-        }
-        if(fileInfo.isFile()){
-            res.sendFile(pathToFile);
-            console.log(`path ==> ${pathToFile}`);
-          
-        }else{
-          next();
-        }
-    })
-});
-
+app.use(express.static(pathToStatic));
 
 app.use((req, res, next) => {
   res.sendStatus(404);
